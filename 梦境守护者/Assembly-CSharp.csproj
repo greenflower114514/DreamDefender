@@ -56,8 +56,13 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Script\Controller.cs" />
     <Compile Include="Assets\Script\DestroyGhost.cs" />
+    <Compile Include="Assets\Script\UIController.cs" />
+    <Compile Include="Assets\Script\Controller.cs" />
+    <Compile Include="Assets\Script\TextMessaging.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\文本文档\对话文本.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

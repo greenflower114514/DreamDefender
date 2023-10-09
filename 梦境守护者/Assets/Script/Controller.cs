@@ -352,7 +352,10 @@ public class Controller : MonoBehaviour
         //dash
         if (dash)
         {
-            rb.velocity = new Vector2(dir.x / Mathf.Abs(dir.x) * dashSpeed,0);//得到一个面朝方向的速度
+            if(dir.x != 0)//避免0做除数而出错
+            {
+                rb.velocity = new Vector2(dir.x / Mathf.Abs(dir.x) * dashSpeed, 0);//得到一个面朝方向的速度
+            }
             rb.gravityScale = 0;//冲刺时将重力设置为0
             //strength -= dashStrength;//体力减少在动画控制代码中实现过了
         }
