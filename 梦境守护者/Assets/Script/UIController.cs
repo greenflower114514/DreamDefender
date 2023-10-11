@@ -13,6 +13,13 @@ public class UIController : MonoBehaviour
     public int currentIndex;//对话数组的索引，用于确定当前对话进行的位置
     */
 
+    /*
+    [Header("获取场景中的所有物体")]
+    GameObject[] all = Resources.FindObjectsOfTypeAll(typeof(GameObject)) as GameObject[];
+    */
+
+    public GameObject player;//获取守护者
+
     [Header("新版对话框系统相关")]
     public GameObject dialogPanalNew;//新版对话框面板
     public Image headImage;//要显示的人物头像图片
@@ -33,6 +40,13 @@ public class UIController : MonoBehaviour
 
     public List<string> textList = new List<string>();
 
+    [Header("控制屏幕明暗的面板相关")]
+    public GameObject dimmingPanal;
+    public int dimmingPanalState;//用于控制明暗控制面板的状态
+    [SerializeField] float colorChangeSpeed;//控制面板颜色转换速度
+    public int circleNum;//用于记录当前黑白转化次数
+    [SerializeField] float waitTime;//控制屏幕变为纯色后的等待时间
+
 
     // Start is called before the first frame update
     private void Awake()//物品激活就执行
@@ -47,6 +61,8 @@ public class UIController : MonoBehaviour
     }
     void Start()
     {
+        dimmingPanal.SetActive(true);
+        circleNum = 0;
         isTyping = true;
         //dialogText.text = DialogTextList[currentIndex];
         //dialog[0] = false;//初始第一段对话未完成
@@ -55,6 +71,8 @@ public class UIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //对话框控制
+
         if (dialogNum >= 0)//有对话正在进行则开启对话框
             dialogPanalNew.active = true;
         if(dialogPanalNew.active == true)//如果对话框被激活
@@ -87,6 +105,58 @@ public class UIController : MonoBehaviour
                     }
                 }
             
+        }
+
+        //明暗面板控制
+
+    if(dimmingPanalState == 1)//播放白色转场
+        {
+            //dimmingPanal.GetComponent<Image>().color = new Color(1,1,1,0);//将屏幕切换为白色
+            if (Mathf.Abs(dimmingPanal.GetComponent<Image>().color.a - 1) > 0.01 && circleNum == 0)
+            {
+                dimmingPanal.GetComponent<Image>().color = Color.Lerp(dimmingPanal.GetComponent<Image>().color, new Color(1, 1, 1, 1), colorChangeSpeed * Time.deltaTime);//转换屏幕颜色为纯白色
+            }
+            else if (circleNum == 0)//循环第一次则颜色加深
+            {
+                Coroutine waitTime = StartCoroutine(WaitTime());//携程等待一段时间
+            }
+            if (Mathf.Abs(dimmingPanal.GetComponent<Image>().color.a) > 0.01 && circleNum == 1)//第二次循环则颜色减淡
+            {
+                dimmingPanal.GetComponent<Image>().color = Color.Lerp(dimmingPanal.GetComponent<Image>().color, new Color(1, 1, 1, 0), colorChangeSpeed * Time.deltaTime);//转换屏幕颜色为原来颜色
+            }
+            else if (circleNum == 1)
+            {
+                circleNum = 0;
+                dimmingPanalState = 0;
+            }
+            //Color.Lerp(dimmingPanal.GetComponent<Image>().color, new Color(1, 1, 1, 0), colorChangeSpeed * Time.deltaTime);//转换屏幕颜色为原来颜色
+           // Debug.Log(dimmingPanal.GetComponent<Image>().color);
+            //dimmingPanalState = 0;//将明暗转换面板状态切换为无状态
+        }
+        if (dimmingPanalState == 2)//播放黑色转场
+        {
+            //dimmingPanal.GetComponent<Image>().color = new Color(0,0,0,0);//将屏幕切换为黑色
+            if(Mathf.Abs(dimmingPanal.GetComponent<Image>().color.a - 1) > 0.01 && circleNum == 0)
+            {
+                dimmingPanal.GetComponent<Image>().color = Color.Lerp(dimmingPanal.GetComponent<Image>().color, new Color(0, 0, 0, 1), colorChangeSpeed * Time.deltaTime);//转换屏幕颜色为纯黑色
+            }
+            else if(circleNum == 0)
+            {
+                Coroutine waitTime = StartCoroutine(WaitTime());
+            }
+            if(Mathf.Abs(dimmingPanal.GetComponent<Image>().color.a) > 0.01 && circleNum == 1)
+            {
+                dimmingPanal.GetComponent<Image>().color = Color.Lerp(dimmingPanal.GetComponent<Image>().color, new Color(0, 0, 0, 0), colorChangeSpeed * Time.deltaTime);//转换屏幕颜色为原来颜色
+            }
+            else if(circleNum == 1)
+            {
+                circleNum = 0;
+                dimmingPanalState = 0;
+            }
+
+            //Color.Lerp(dimmingPanal.GetComponent<Image>().color, new Color(0,0, 0, 0), colorChangeSpeed * Time.deltaTime);//转换屏幕颜色为原来颜色
+            //Debug.Log(dimmingPanal.GetComponent<Image>().color);
+            //dimmingPanalState = 0;//将明暗转换面板状态切换为无状态
         }
     }
     /*
@@ -154,4 +224,12 @@ public class UIController : MonoBehaviour
         index++;//该行文本显示完毕，切换到下一行文本
     }
     //----------------------------------------------------------------------------------------------
+
+    //------------------------------------明暗控制面板-----------------------------------------------
+
+    IEnumerator WaitTime()
+    {
+        yield return new WaitForSeconds(waitTime);
+        circleNum = 1;
+    }
 }

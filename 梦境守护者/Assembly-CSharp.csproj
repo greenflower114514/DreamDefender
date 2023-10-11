@@ -57,9 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\DestroyGhost.cs" />
+    <Compile Include="Assets\Script\TextMessaging.cs" />
     <Compile Include="Assets\Script\UIController.cs" />
     <Compile Include="Assets\Script\Controller.cs" />
-    <Compile Include="Assets\Script\TextMessaging.cs" />
+    <Compile Include="Assets\Script\EnimyController.cs" />
+    <Compile Include="Assets\Script\ScreenDimmingController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\文本文档\对话文本.txt" />
